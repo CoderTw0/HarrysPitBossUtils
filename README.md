@@ -16,6 +16,11 @@ This was a project done in my freetime between work and school, please let me kn
 
 ## TODO:
 * Clean up redundant logic
-* Rework warning handling for bosses that have 2 of roomba/shatter/shadow
+* Rework warning handling for bosses that have 2 of roomba/shatter/shadow, and ready procs
 * Highlight the beams between pylons and the boss/other pylons
 * Map detection logic for the boss timers
+* Nuke Highlight
+* Boss health display
+* Real weeny tracker
+* Eviscerate Warning
+  
