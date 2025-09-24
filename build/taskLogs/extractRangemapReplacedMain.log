@@ -1,0 +1,33 @@
+Symbol range map extraction starting
+Processing 31 files
+processing com\lukflug\examplemod8forge\ClickGUI.java
+processing com\lukflug\examplemod8forge\ExampleMod.java
+processing com\lukflug\examplemod8forge\module\Category.java
+processing com\lukflug\examplemod8forge\module\ClickGUIModule.java
+processing com\lukflug\examplemod8forge\module\Debug\ChatMessageDebug.java
+processing com\lukflug\examplemod8forge\module\Debug\DebugLogger.java
+processing com\lukflug\examplemod8forge\module\Debug\NametagDebug.java
+processing com\lukflug\examplemod8forge\module\HUDEditorModule.java
+processing com\lukflug\examplemod8forge\module\LogoModule.java
+processing com\lukflug\examplemod8forge\module\Module.java
+processing com\lukflug\examplemod8forge\module\TabGUIModule.java
+processing com\lukflug\examplemod8forge\module\WatermarkModule.java
+processing com\lukflug\examplemod8forge\module\helpers\BossHudRender.java
+processing com\lukflug\examplemod8forge\module\helpers\BossMessageParser.java
+processing com\lukflug\examplemod8forge\module\helpers\MapDetection.java
+processing com\lukflug\examplemod8forge\module\helpers\PersistenceHelper.java
+processing com\lukflug\examplemod8forge\module\impl\AutoClicker.java
+processing com\lukflug\examplemod8forge\module\impl\CurseDropEstimate.java
+processing com\lukflug\examplemod8forge\module\impl\PylonHighlight.java
+processing com\lukflug\examplemod8forge\module\impl\RoombaWarning.java
+processing com\lukflug\examplemod8forge\module\impl\ShadowWarning.java
+processing com\lukflug\examplemod8forge\module\impl\ShatterWarning.java
+processing com\lukflug\examplemod8forge\module\impl\SpawnTimers.java
+processing com\lukflug\examplemod8forge\setting\BooleanSetting.java
+processing com\lukflug\examplemod8forge\setting\ColorSetting.java
+processing com\lukflug\examplemod8forge\setting\DoubleSetting.java
+processing com\lukflug\examplemod8forge\setting\EnumSetting.java
+processing com\lukflug\examplemod8forge\setting\IntegerSetting.java
+processing com\lukflug\examplemod8forge\setting\KeybindSetting.java
+processing com\lukflug\examplemod8forge\setting\Setting.java
+processing com\lukflug\examplemod8forge\setting\StringSetting.java

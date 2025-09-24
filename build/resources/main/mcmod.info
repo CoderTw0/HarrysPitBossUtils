@@ -1,0 +1,12 @@
+[
+	{
+		"modid": "example-mod8-forge",
+		"name": "PanelStudio-MC8-Forge Example Mod",
+		"description": "An example mod for PanelStudio-MC8-Forge.",
+		"version": "0.2.4",
+		"mcversion": "1.8.9",
+		"url": "https://lukflug.github.io/",
+		"authorList": ["lukflug"],
+		"logoFile": "assets/examplemod/panelstudio.png"
+	}
+]
