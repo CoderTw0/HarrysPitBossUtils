@@ -3,6 +3,8 @@
 
 This was a project done in my freetime between work and school, please let me know if you encounter any errors!
 
+Right Ctrl is default key to open the clickgui, and can be changed. I need to add persistence for changes to this
+
 ## Features:
 * Saved settings between launches (toggled modules, height settings for the HUD)
 
@@ -23,4 +25,6 @@ This was a project done in my freetime between work and school, please let me kn
 * Boss health display
 * Real weeny tracker
 * Eviscerate Warning
+* Quick menu buttons (button to open /craftcurse, any others people may want)
+  
   
