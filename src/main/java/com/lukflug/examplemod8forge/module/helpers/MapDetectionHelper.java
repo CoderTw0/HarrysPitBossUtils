@@ -44,7 +44,7 @@ public class MapDetectionHelper {
             Map = "Seasons";
         } else if (MatchBlock(0, 97, -17, Block.getBlockFromName("minecraft:enchanting_table"))) {
             Map = "Kings Map";
-        } else if (MatchBlock(100, 50, 100, Block.getBlockFromName("minecraft:air"))) {
+        } else if (MatchBlock(18, 85, 0, Block.getBlockFromName("minecraft:enchanting_table"))) {
             Map = "Paradise Grove";
         }
     }
