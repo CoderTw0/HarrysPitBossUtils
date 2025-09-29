@@ -1,5 +1,6 @@
 package com.lukflug.examplemod8forge.module;
 
+import com.lukflug.examplemod8forge.module.helpers.PersistenceHelper;
 import org.lwjgl.input.Keyboard;
 
 import com.lukflug.examplemod8forge.setting.EnumSetting;
@@ -13,7 +14,7 @@ public class ClickGUIModule extends Module {
 	public static final IntegerSetting animationSpeed=new IntegerSetting("Animation Speed","animationSpeed","The speed of GUI animations.",()->true,0,1000,200);
 	public static final EnumSetting<Theme> theme=new EnumSetting<Theme>("Theme","theme","What theme to use.",()->true,Theme.GameSense,Theme.class);
 	public static final EnumSetting<Layout> layout=new EnumSetting<Layout>("Layout","layout","What layout to use.",()->true,Layout.ClassicPanel,Layout.class);
-	public static final KeybindSetting keybind=new KeybindSetting("Keybind","keybind","The key to toggle the module.",()->true,Keyboard.KEY_RCONTROL);
+	public static final KeybindSetting keybind=new KeybindSetting("Keybind","keybind","The key to toggle the module.",()->true,PersistenceHelper.getInt("ClickGUI","keybind",Keyboard.KEY_RCONTROL));
 	
 	public ClickGUIModule() {
 		super("ClickGUI","Module containing ClickGUI settings.",()->true,false);
@@ -37,4 +38,5 @@ public class ClickGUIModule extends Module {
 	public enum Layout {
 		ClassicPanel,PopupPanel,DraggablePanel,SinglePanel,PanelMenu,ColorPanel,CSGOHorizontal,CSGOVertical,CSGOCategory,SearchableCSGO;
 	}
+
 }

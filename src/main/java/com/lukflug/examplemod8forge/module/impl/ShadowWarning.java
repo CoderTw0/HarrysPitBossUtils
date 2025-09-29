@@ -35,9 +35,9 @@ public class ShadowWarning extends Module {
             int max = parser.shdwMax;
             boolean ready = parser.sendShdwReady;
 
-            if (current >= max || ready) {
+            if (current == max || ready) {
                 hud.setMessage("SHADOW PROCCING", 2000);
-            } else if (current >= max - 2 && current < max) {
+            } else if (current == max - 2 || current == max - 1) {
                 hud.setMessage("SHADOW INCOMING", 2000);
             }
         }

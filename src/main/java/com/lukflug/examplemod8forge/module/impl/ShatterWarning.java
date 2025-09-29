@@ -35,9 +35,9 @@ public class ShatterWarning extends Module {
             int max = parser.shtrMax;
             boolean ready = parser.sendShtrReady;
 
-            if (current >= max || ready) {
+            if (current == max || ready) {
                 hud.setMessage("SHATTER PROCCING", 2000);
-            } else if (current >= max - 2 && current < max) {
+            } else if (current == max - 2 || current == max -1 ) {
                 hud.setMessage("SHATTER INCOMING GET BACK", 2000);
             }
         }

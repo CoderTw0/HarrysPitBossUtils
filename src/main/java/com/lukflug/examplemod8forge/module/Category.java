@@ -18,7 +18,7 @@ import com.lukflug.panelstudio.setting.IClient;
 import com.lukflug.panelstudio.setting.IModule;
 
 public enum Category implements ICategory {
-	BossHelpers("BossHelpers"),DEBUG("Debug"),HUD("HUD"),MISCELLANEOUS("Miscellaneous"),MOVEMENT("Movement"),OTHER("Other"),RENDER("Render"),WORLD("World");
+	BossHelpers("BossHelpers"),DEBUG("Debug"),HUD("HUD"),MISCELLANEOUS("Miscellaneous"),PitStuff("PitStuff"),OTHER("Other"),RENDER("Render"),WORLD("World");
 	public final String displayName;
 	public final List<Module> modules=new ArrayList<Module>();
 	public static Random random=new Random();

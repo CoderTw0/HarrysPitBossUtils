@@ -2,33 +2,29 @@ package com.lukflug.examplemod8forge.module.impl;
 
 import com.lukflug.examplemod8forge.module.Debug.DebugLogger;
 import com.lukflug.examplemod8forge.module.Module;
+import com.lukflug.examplemod8forge.module.helpers.MapDetectionHelper;
 import com.lukflug.examplemod8forge.module.helpers.PersistenceHelper;
+import com.lukflug.examplemod8forge.module.helpers.QuadrentLabelHelper;
 import com.lukflug.examplemod8forge.setting.IntegerSetting;
-import com.lukflug.panelstudio.base.IToggleable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityArmorStand;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SpawnTimers extends Module {
     private static final Pattern COLOR_ENCODING_PATTERN = Pattern.compile("[§�].");
     private static final Minecraft mc = Minecraft.getMinecraft();
 
-    private static final Pattern RECHARGING_PATTERN = Pattern.compile("Recharging\\.\\.\\. \\(\\s*(?:(\\d+)m\\s*)?(\\d+)s\\s*\\)");
-    private static final Pattern READY_PATTERN = Pattern.compile("READY! Expires: (?:(\\d+)m\\s*)?(\\d+)s");
+    private final Map<String, Long> spawnerTimers = new HashMap<>();
 
-    private final Map<String, String> spawnerTimers = new HashMap<>();
     private final IntegerSetting Height = new IntegerSetting(
             "Height", "Height", "Height of timer display", () -> true, 1, 100, 50
     );
@@ -37,47 +33,62 @@ public class SpawnTimers extends Module {
         super("SpawnTimers", "Boss spawner status list", () -> true, true);
         MinecraftForge.EVENT_BUS.register(this);
         settings.add(Height);
-        Height.setOnChange((newValue) -> {
+        Height.setOnChange(newValue -> {
             PersistenceHelper.setInt("SpawnTimers", "Height", newValue);
             PersistenceHelper.save();
         });
         loadState();
     }
 
-    @Override
-    public IToggleable isEnabled() {
-        return super.isEnabled();
-    }
-
     @SubscribeEvent
-    public void onTickEvent(TickEvent.ClientTickEvent event) {
+    public void onTick(net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent event) {
         if (!isEnabled().isOn() || mc.thePlayer == null || mc.theWorld == null) return;
-
-        spawnerTimers.clear();
 
         for (Entity e : mc.theWorld.loadedEntityList) {
             if (!(e instanceof EntityArmorStand)) continue;
-
             EntityArmorStand stand = (EntityArmorStand) e;
 
-            DebugLogger.log("Found ArmorStand: " + stand.getDisplayName().getFormattedText());
-
             String plain = stripAll(stand.getDisplayName().getFormattedText());
-            DebugLogger.log("[SpawnTimers] Plain: " + plain);
+            if (plain.startsWith("READY!")) {
+                String quadrant = getQuadrant(stand.posX, stand.posZ);
 
-            Matcher m1 = RECHARGING_PATTERN.matcher(plain);
-            Matcher m2 = READY_PATTERN.matcher(plain);
+                Long existing = spawnerTimers.get(quadrant);
+                if (existing == null || existing == 0L) {
+                    spawnerTimers.put(quadrant, 0L);
+                    DebugLogger.log("[SpawnTimers] Found READY! spawner at " + quadrant);
+                } else {
 
-            String quadrant = getQuadrant(stand.posX, stand.posZ);
+                    long now = System.currentTimeMillis();
+                    if (existing > now) {
+                        DebugLogger.log("[SpawnTimers] Ignored READY! at " + quadrant + " (still on cooldown)");
+                    }
+                }
+            }
+        }
+    }
 
-            if (m1.find()) {
-                String minutes = m1.group(1);
-                String seconds = m1.group(2);
-                String time = (minutes != null ? minutes + "m " : "") + seconds + "s";
-                spawnerTimers.put(quadrant, "Recharging (" + time + ")");
-            } else if (m2.find()) {
-                String expires = m2.group(1);
-                spawnerTimers.put(quadrant, "READY! (" + expires + ")");
+    @SubscribeEvent
+    public void onChat(ClientChatReceivedEvent event) {
+        if (!isEnabled().isOn()) return;
+
+        String msg = stripAll(event.message.getUnformattedText());
+        if (msg.startsWith("BOSS! You challenged")) {
+            EntityArmorStand nearest = null;
+            double bestDist = Double.MAX_VALUE;
+            for (Entity e : mc.theWorld.loadedEntityList) {
+                if (!(e instanceof EntityArmorStand)) continue;
+                double dist = e.getDistanceSqToEntity(mc.thePlayer);
+                if (dist < bestDist) {
+                    bestDist = dist;
+                    nearest = (EntityArmorStand) e;
+                }
+            }
+
+            if (nearest != null) {
+                String quadrant = getQuadrant(nearest.posX, nearest.posZ);
+                long expiry = System.currentTimeMillis() + (12 * 60 * 1000);
+                spawnerTimers.put(quadrant, expiry);
+                DebugLogger.log("[SpawnTimers] Started 12m timer for " + quadrant);
             }
         }
     }
@@ -93,19 +104,47 @@ public class SpawnTimers extends Module {
         int baseY = (int) ((Height.getValue() / 100.0) * screenHeight);
         int y = baseY;
 
+        String mapName = MapDetectionHelper.INSTANCE.Map;
+        String mapLine = "Map: " + mapName;
+        int mapWidth = mc.fontRendererObj.getStringWidth(mapLine);
+        int mapX = screenWidth - mapWidth - 5;
+        mc.fontRendererObj.drawStringWithShadow(mapLine, mapX, y, 0x55FF55);
+        y += mc.fontRendererObj.FONT_HEIGHT + 4;
+
         if (spawnerTimers.isEmpty()) {
-            String line = "No spawners found";
+            String line = "No spawners tracked";
             int lineWidth = mc.fontRendererObj.getStringWidth(line);
             int x = screenWidth - lineWidth - 5;
             mc.fontRendererObj.drawStringWithShadow(line, x, y, 0xAA00FF);
             return;
         }
 
-        for (Map.Entry<String, String> entry : spawnerTimers.entrySet()) {
-            String line = entry.getKey() + ": " + entry.getValue();
-            int lineWidth = mc.fontRendererObj.getStringWidth(line);
+        long now = System.currentTimeMillis();
+
+        for (Map.Entry<String, Long> entry : spawnerTimers.entrySet()) {
+            String quadrant = entry.getKey();
+            long expiry = entry.getValue();
+
+            String label = QuadrentLabelHelper.getLabelForQuadrant(mapName, quadrant);
+
+            String text;
+            if (expiry == 0L) {
+                text = label + ": READY!";
+            } else {
+                long remaining = expiry - now;
+                if (remaining <= 0) {
+                    text = label + ": READY!";
+                    entry.setValue(0L);
+                } else {
+                    long minutes = (remaining / 1000) / 60;
+                    long seconds = (remaining / 1000) % 60;
+                    text = label + ": " + minutes + "m " + seconds + "s";
+                }
+            }
+
+            int lineWidth = mc.fontRendererObj.getStringWidth(text);
             int x = screenWidth - lineWidth - 5;
-            mc.fontRendererObj.drawStringWithShadow(line, x, y, 0xAA00FF);
+            mc.fontRendererObj.drawStringWithShadow(text, x, y, 0xAA00FF);
             y += mc.fontRendererObj.FONT_HEIGHT + 2;
         }
     }

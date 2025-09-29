@@ -7,8 +7,6 @@ import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import scala.Int;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -79,18 +77,8 @@ public class BossMessageParser {
         return COLOR_ENCODING_PATTERN.matcher(input).replaceAll("");
     }
 
-    public static Integer getShtrValue(String plain) {
-        Matcher m = SHTR_PATTERN.matcher(plain);
-        return m.find() ? Integer.parseInt(m.group(1)) : null;
-    }
-
     public static boolean isShtrReady(String plain) {
         return SHTR_READY_PATTERN.matcher(plain).find();
-    }
-
-    public static Integer getShdwValue(String plain) {
-        Matcher m = SHDW_PATTERN.matcher(plain);
-        return m.find() ? Integer.parseInt(m.group(1)) : null;
     }
 
     public static int[] getShtrProgress(String plain) {

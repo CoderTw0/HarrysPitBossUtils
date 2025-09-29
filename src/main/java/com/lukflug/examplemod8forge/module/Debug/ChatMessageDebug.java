@@ -11,11 +11,13 @@ public class ChatMessageDebug extends Module {
     private static Minecraft mc = Minecraft.getMinecraft();
     private boolean enabled = false;
     private static KeybindSetting keybind = new KeybindSetting("keybind", "keybind", "Key to toggle debugger", () -> true, 0);
+
     public ChatMessageDebug() {
         super("ChatMessageDebugger", "Parses chat messages", () -> true, true);
         settings.add(keybind);
         MinecraftForge.EVENT_BUS.register(this);
     }
+
     @Override
     public IToggleable isEnabled() {
         return new IToggleable() {
@@ -30,6 +32,7 @@ public class ChatMessageDebug extends Module {
             }
         };
     }
+
     @SubscribeEvent
     public void onChat(net.minecraftforge.client.event.ClientChatReceivedEvent event) {
         if (!enabled || mc.thePlayer == null || mc.theWorld == null) return;

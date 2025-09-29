@@ -59,4 +59,8 @@ public abstract class Setting<T> implements ILabeled {
 		if (subSettings.size()==0) return null;
 		return subSettings.stream().filter(setting->setting instanceof ISetting).sorted((a,b)->a.displayName.compareTo(b.displayName)).map(setting->(ISetting<?>)setting);
 	}
+
+	public String getConfigName() {
+		return configName;
+	}
 }

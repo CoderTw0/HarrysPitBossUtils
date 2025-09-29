@@ -13,6 +13,7 @@ public class DebugLogger extends Module {
     public DebugLogger() {
         super("Debug", "Debug Message Helper", () -> true, true);
     }
+
     @Override
     public IToggleable isEnabled() {
         return new IToggleable() {

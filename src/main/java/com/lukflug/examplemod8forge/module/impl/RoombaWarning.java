@@ -24,13 +24,14 @@ public class RoombaWarning extends Module {
         loadState();
     }
 
+    private long lastRoomba = 0;
+
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         long now = System.currentTimeMillis();
-        long lastRoomba = 0;
         double range = 25;
         double rangeSq = range * range;
-        if (!isEnabled().isOn() || mc.theWorld == null) return;
+        if (!isEnabled().isOn() || mc.thePlayer == null ||mc.theWorld == null) return;
 
         boolean found = false;
         for (Entity e : mc.theWorld.loadedEntityList) {
@@ -46,6 +47,7 @@ public class RoombaWarning extends Module {
         }
         if (found && now - lastRoomba > 3000) {
             hud.setMessage("ROOMBA INCOMING", 3000);
+            lastRoomba = now;
 
         }
     }

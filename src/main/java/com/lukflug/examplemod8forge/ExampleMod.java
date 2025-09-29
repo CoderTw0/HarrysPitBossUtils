@@ -2,6 +2,7 @@ package com.lukflug.examplemod8forge;
 
 import com.lukflug.examplemod8forge.module.Debug.DebugLogger;
 import com.lukflug.examplemod8forge.module.Debug.NametagDebug;
+import com.lukflug.examplemod8forge.module.Debug.SidebarDebugger;
 import com.lukflug.examplemod8forge.module.helpers.BossMessageParser;
 import com.lukflug.examplemod8forge.module.Debug.ChatMessageDebug;
 import com.lukflug.examplemod8forge.module.helpers.PersistenceHelper;
@@ -55,6 +56,7 @@ public class ExampleMod {
 		Category.DEBUG.modules.add(new DebugLogger());
 		Category.DEBUG.modules.add(new ChatMessageDebug());
 		Category.DEBUG.modules.add(new NametagDebug());
+		Category.DEBUG.modules.add(new SidebarDebugger());
 		Category.BossHelpers.modules.add(new ShadowWarning());
 		Category.BossHelpers.modules.add(new ShatterWarning());
 		Category.BossHelpers.modules.add(new CurseDropEstimate());
@@ -62,6 +64,7 @@ public class ExampleMod {
 		Category.BossHelpers.modules.add(new SpawnTimers());
 		Category.BossHelpers.modules.add(new PylonHighlight());
 		Category.BossHelpers.modules.add(new AutoClicker());
+		Category.PitStuff.modules.add(new SessionStats());
 
 
 		gui=new ClickGUI();

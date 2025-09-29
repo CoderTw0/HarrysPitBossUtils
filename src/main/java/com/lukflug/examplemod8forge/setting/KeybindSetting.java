@@ -1,5 +1,6 @@
 package com.lukflug.examplemod8forge.setting;
 
+import com.lukflug.examplemod8forge.module.helpers.PersistenceHelper;
 import org.lwjgl.input.Keyboard;
 
 import com.lukflug.panelstudio.base.IBoolean;
@@ -18,18 +19,15 @@ public class KeybindSetting extends Setting<Integer> implements IKeybindSetting 
 
 	@Override
 	public void setKey (int key) {
-		setValue(key);
+		super.setValue(key);
+		PersistenceHelper.setInt("ClickGUI", getConfigName(), key); // persist change
+		PersistenceHelper.save();
 	}
+
 
 	@Override
 	public String getKeyName() {
 		return Keyboard.getKeyName(getKey());
 	}
 
-	public boolean isPressed() {
-		boolean current = Keyboard.isKeyDown(getKey());
-		boolean pressed = current && !lastKeyState;
-		lastKeyState = current;
-		return pressed;
-	}
 }

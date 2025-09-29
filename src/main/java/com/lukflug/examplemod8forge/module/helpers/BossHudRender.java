@@ -10,6 +10,33 @@ import org.lwjgl.opengl.GL11;
 public class BossHudRender {
     private static final Minecraft mc = Minecraft.getMinecraft();
 
+    private BossHudRender(boolean register) {
+        if (register) MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    private static final BossHudRender INSTANCE = new BossHudRender(true);
+
+    public static BossHudRender getInstance() {
+        return INSTANCE;
+    }
+
+    //TODO -> boring stuff, needs fixing
+
+    private HudMessage current = null;
+    private HudMessage next = null;
+
+    public void setMessage(String msg, long durationMs) {
+        long now = System.currentTimeMillis();
+
+        if (current == null || now >= current.until) {
+            current = new HudMessage(msg, durationMs);
+            next = null;
+        } else {
+            next = new HudMessage(msg, durationMs);
+        }
+    }
+
+
     private static class HudMessage {
         final String text;
         long until;
@@ -20,28 +47,6 @@ public class BossHudRender {
         }
     }
 
-    private static final BossHudRender INSTANCE = new BossHudRender(true);
-
-    public static BossHudRender getInstance() {
-        return INSTANCE;
-    }
-
-    private HudMessage current = null;
-
-    private BossHudRender(boolean register) {
-        if (register) MinecraftForge.EVENT_BUS.register(this);
-    }
-
-    public void setMessage(String msg, long durationMs) {
-        long now = System.currentTimeMillis();
-
-        if (current != null) {
-            current.until = now + 250;
-        }
-
-        current = new HudMessage(msg, durationMs);
-    }
-
     @SubscribeEvent
     public void onRenderOverlay(RenderGameOverlayEvent.Text event) {
         render(2);
@@ -49,7 +54,17 @@ public class BossHudRender {
 
     private void render(int scale) {
         long now = System.currentTimeMillis();
-        if (current == null || now >= current.until) return;
+        if (current == null) return;
+
+        if (now >= current.until) {
+            if (next != null) {
+                current = next;
+                next = null;
+            } else {
+                current = null;
+                return;
+            }
+        }
 
         String message = current.text;
         int rgb = 0xAA00FF;
