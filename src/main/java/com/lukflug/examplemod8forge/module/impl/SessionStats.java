@@ -17,6 +17,7 @@ public class SessionStats extends Module {
     public SessionStats() {
         super("SessionStats", "Tracks coins gained during streaks", () -> true, true);
         MinecraftForge.EVENT_BUS.register(this);
+        loadState();
     }
 
     @SubscribeEvent
